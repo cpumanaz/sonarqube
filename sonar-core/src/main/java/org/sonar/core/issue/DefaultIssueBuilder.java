@@ -21,15 +21,15 @@ package org.sonar.core.issue;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import java.util.Map;
+import javax.annotation.Nullable;
+import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.issue.Issuable;
+import org.sonar.api.issue.Issuable.IssueBuilder;
 import org.sonar.api.issue.Issue;
 import org.sonar.api.issue.internal.DefaultIssue;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.internal.Uuids;
-
-import javax.annotation.Nullable;
-
-import java.util.Map;
 
 public class DefaultIssueBuilder implements Issuable.IssueBuilder {
 
@@ -74,6 +74,24 @@ public class DefaultIssueBuilder implements Issuable.IssueBuilder {
   public DefaultIssueBuilder message(@Nullable String s) {
     this.message = s;
     return this;
+  }
+
+  @Override
+  public NewIssueLocation newLocation() {
+    // TODO
+    return null;
+  }
+
+  @Override
+  public IssueBuilder addExecutionFlow(NewIssueLocation... flow) {
+    // TODO
+    return null;
+  }
+
+  @Override
+  public IssueBuilder addLocation(NewIssueLocation location) {
+    // TODO
+    return null;
   }
 
   @Override

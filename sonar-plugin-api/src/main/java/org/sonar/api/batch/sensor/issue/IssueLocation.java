@@ -17,31 +17,38 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.batch.issue;
+package org.sonar.api.batch.sensor.issue;
 
-import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.issue.Issuable;
-import org.sonar.batch.deprecated.perspectives.PerspectiveBuilder;
-import org.sonar.batch.index.BatchComponent;
-import org.sonar.batch.sensor.DefaultSensorContext;
+import com.google.common.annotations.Beta;
+import javax.annotation.CheckForNull;
+import org.sonar.api.batch.fs.InputPath;
+import org.sonar.api.batch.fs.TextRange;
 
 /**
- * Create the perspective {@link Issuable} on components.
- * @since 3.6
+ * Represents an issue location.
+ *
+ * @since 5.2
  */
-public class IssuableFactory extends PerspectiveBuilder<Issuable> {
+@Beta
+public interface IssueLocation {
 
-  private final IssueCache cache;
-  private final SensorContext sensorContext;
+  /**
+   * The {@link InputPath} this location belongs to. Returns null if location is global to the project.
+   */
+  @CheckForNull
+  InputPath inputPath();
 
-  public IssuableFactory(IssueCache cache, DefaultSensorContext sensorContext) {
-    super(Issuable.class);
-    this.cache = cache;
-    this.sensorContext = sensorContext;
-  }
+  /**
+   * Range of the issue. Null for global issues and issues on directories. Can also be null
+   * for files (issue global to the file).
+   */
+  @CheckForNull
+  TextRange textRange();
 
-  @Override
-  public Issuable loadPerspective(Class<Issuable> perspectiveClass, BatchComponent component) {
-    return new DefaultIssuable(component, cache, sensorContext);
-  }
+  /**
+   * Message of the issue.
+   */
+  @CheckForNull
+  String message();
+
 }

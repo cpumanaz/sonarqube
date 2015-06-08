@@ -19,6 +19,8 @@
  */
 package org.sonar.xoo.rule;
 
+import java.io.IOException;
+import java.io.StringReader;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -27,6 +29,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
+import org.sonar.api.batch.fs.internal.FileMetadata;
 import org.sonar.api.batch.rule.Severity;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
@@ -35,8 +38,6 @@ import org.sonar.api.batch.sensor.issue.Issue;
 import org.sonar.api.batch.sensor.issue.internal.DefaultIssue;
 import org.sonar.api.config.Settings;
 import org.sonar.xoo.Xoo;
-
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -61,7 +62,8 @@ public class OneIssuePerLineSensorTest {
   @Test
   public void testRule() throws IOException {
     DefaultFileSystem fs = new DefaultFileSystem(temp.newFolder().toPath());
-    DefaultInputFile inputFile = new DefaultInputFile("foo", "src/Foo.xoo").setLanguage(Xoo.KEY).setLines(10);
+    DefaultInputFile inputFile = new DefaultInputFile("foo", "src/Foo.xoo").setLanguage(Xoo.KEY)
+      .initMetadata(new FileMetadata().readMetadata(new StringReader("a\nb\nc\nd\ne\nf\ng\nh\ni\n")));
     fs.add(inputFile);
 
     SensorContext context = mock(SensorContext.class);
@@ -85,7 +87,8 @@ public class OneIssuePerLineSensorTest {
   @Test
   public void testForceSeverity() throws IOException {
     DefaultFileSystem fs = new DefaultFileSystem(temp.newFolder().toPath());
-    DefaultInputFile inputFile = new DefaultInputFile("foo", "src/Foo.xoo").setLanguage(Xoo.KEY).setLines(10);
+    DefaultInputFile inputFile = new DefaultInputFile("foo", "src/Foo.xoo").setLanguage(Xoo.KEY)
+      .initMetadata(new FileMetadata().readMetadata(new StringReader("a\nb\nc\nd\ne\nf\ng\nh\ni\n")));
     fs.add(inputFile);
 
     SensorContext context = mock(SensorContext.class);

@@ -20,12 +20,11 @@
 package org.sonar.api.batch.sensor.issue;
 
 import com.google.common.annotations.Beta;
-import org.sonar.api.batch.fs.InputPath;
+import java.util.List;
+import javax.annotation.CheckForNull;
 import org.sonar.api.batch.rule.Severity;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.rule.RuleKey;
-
-import javax.annotation.CheckForNull;
 
 /**
  * Represents an issue detected by a {@link Sensor}.
@@ -41,34 +40,27 @@ public interface Issue {
   RuleKey ruleKey();
 
   /**
-   * The {@link InputPath} this issue belongs to. Returns null if issue is global to the project.
-   */
-  @CheckForNull
-  InputPath inputPath();
-
-  /**
-   * Line of the issue. Null for global issues and issues on directories. Can also be null
-   * for files (issue global to the file).
-   */
-  @CheckForNull
-  Integer line();
-
-  /**
    * Effort to fix the issue. Used by technical debt model.
    */
   @CheckForNull
   Double effortToFix();
 
   /**
-   * Message of the issue.
-   */
-  @CheckForNull
-  String message();
-
-  /**
    * Overriden severity.
    */
   @CheckForNull
   Severity overridenSeverity();
+
+  /**
+   * List of locations for this issue. Returns at least one location.
+   * @since 5.2
+   */
+  List<IssueLocation> locations();
+
+  /**
+   * List of execution flows for this issue. Can be empty.
+   * @since 5.2
+   */
+  List<List<IssueLocation>> executionFlows();
 
 }
