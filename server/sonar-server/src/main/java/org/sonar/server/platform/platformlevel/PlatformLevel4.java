@@ -633,6 +633,7 @@ public class PlatformLevel4 extends PlatformLevel {
       IssueFilterWriter.class,
       org.sonar.server.issue.filter.AppAction.class,
       org.sonar.server.issue.filter.ShowAction.class,
+      org.sonar.server.issue.filter.SearchAction.class,
       org.sonar.server.issue.filter.FavoritesAction.class,
 
       // action plan

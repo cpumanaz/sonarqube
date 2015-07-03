@@ -20,6 +20,8 @@
 
 package org.sonar.server.issue.filter;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,17 +29,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.sonar.core.issue.db.IssueFilterDto;
-import org.sonar.server.exceptions.NotFoundException;
 import org.sonar.server.tester.UserSessionRule;
 import org.sonar.server.ws.WsTester;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ShowActionTest {
+public class SearchActionTest {
   @Rule
   public UserSessionRule userSessionRule = UserSessionRule.standalone();
 
@@ -46,39 +45,45 @@ public class ShowActionTest {
 
   IssueFilterWriter writer = new IssueFilterWriter();
 
-  ShowAction action;
+  SearchAction action;
 
   WsTester tester;
 
   @Before
   public void setUp() {
-    action = new ShowAction(service, writer, userSessionRule);
-    tester = new WsTester(new IssueFilterWs(mock(AppAction.class), action, mock(SearchAction.class), mock(FavoritesAction.class)));
+    action = new SearchAction(service, writer, userSessionRule);
+    tester = new WsTester(new IssueFilterWs(mock(AppAction.class), mock(ShowAction.class), action, mock(FavoritesAction.class)));
   }
 
   @Test
-  public void show_filter() throws Exception {
-    // logged-in user is 'eric' but filter is owned by 'simon'
-    userSessionRule.login("eric").setUserId(123).setGlobalPermissions("none");
-    when(service.find(13L, userSessionRule)).thenReturn(
-      new IssueFilterDto().setId(13L).setName("Blocker issues").setDescription("All Blocker Issues").setData("severity=BLOCKER").setUserLogin("simon").setShared(true)
-    );
-
-    tester.newGetRequest("api/issue_filters", "show").setParam("id", "13").execute()
-      .assertJson(getClass(), "show_filter.json");
+  public void anonymous_app() throws Exception {
+    userSessionRule.anonymous();
+    tester.newGetRequest("api/issue_filters", "search").execute().assertJson(getClass(), "anonymous_page.json");
   }
 
   @Test
-  public void show_unknown_filter() throws Exception {
-    userSessionRule.login("eric").setUserId(123).setGlobalPermissions("none");
-    when(service.find(42L, userSessionRule)).thenThrow(new NotFoundException("Filter 42 does not exist"));
-
-    try {
-      tester.newGetRequest("api/issue_filters", "show").setParam("id", "42").execute();
-      fail();
-    } catch (NotFoundException e) {
-      assertThat(e).hasMessage("Filter 42 does not exist");
-    }
+  public void logged_in_app() throws Exception {
+    userSessionRule.login("eric").setUserId(123);
+    tester.newGetRequest("api/issue_filters", "search").execute()
+      .assertJson(getClass(), "logged_in_page.json");
   }
 
+  @Test
+  public void logged_in_app_with_favorites() throws Exception {
+    userSessionRule.login("eric").setUserId(123);
+    when(service.findFavoriteFilters(userSessionRule)).thenReturn(Arrays.asList(
+      new IssueFilterDto()
+        .setId(3L)
+        .setName("My Unresolved Issues")
+        .setShared(true)
+        .setData("resolved=false|assignees=__me__"),
+      new IssueFilterDto()
+        .setId(2L)
+        .setName("False Positive and Won't Fix Issues")
+        .setShared(false)
+        .setData("resolutions=FALSE-POSITIVE,WONTFIX")
+    ));
+    tester.newGetRequest("api/issue_filters", "search").execute()
+      .assertJson(getClass(), "logged_in_page_with_favorites.json");
+  }
 }

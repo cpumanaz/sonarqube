@@ -48,7 +48,7 @@ public class IssueFilterWsTest {
 
   @Before
   public void setUp() {
-    ws = new IssueFilterWs(new AppAction(service, issueFilterWriter, userSessionRule), new ShowAction(service, issueFilterWriter, userSessionRule), new FavoritesAction(service, userSessionRule));
+    ws = new IssueFilterWs(new AppAction(service, issueFilterWriter, userSessionRule), new ShowAction(service, issueFilterWriter, userSessionRule), new SearchAction(service, issueFilterWriter, userSessionRule), new FavoritesAction(service, userSessionRule));
     tester = new WsTester(ws);
   }
 

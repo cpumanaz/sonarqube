@@ -51,7 +51,7 @@ public class AppActionTest {
   @Before
   public void setUp() {
     action = new AppAction(service, writer, userSessionRule);
-    tester = new WsTester(new IssueFilterWs(action, mock(ShowAction.class), mock(FavoritesAction.class)));
+    tester = new WsTester(new IssueFilterWs(action, mock(ShowAction.class), mock(SearchAction.class), mock(FavoritesAction.class)));
   }
 
   @Test

@@ -25,11 +25,13 @@ public class IssueFilterWs implements WebService {
 
   private final AppAction appAction;
   private final ShowAction showAction;
+  private final SearchAction searchAction;
   private final FavoritesAction favoritesAction;
 
-  public IssueFilterWs(AppAction appAction, ShowAction showAction, FavoritesAction favoritesAction) {
+  public IssueFilterWs(AppAction appAction, ShowAction showAction, SearchAction searchAction, FavoritesAction favoritesAction) {
     this.appAction = appAction;
     this.showAction = showAction;
+    this.searchAction = searchAction;
     this.favoritesAction = favoritesAction;
   }
 
@@ -40,6 +42,7 @@ public class IssueFilterWs implements WebService {
       .setDescription("Issue Filters management");
     appAction.define(controller);
     showAction.define(controller);
+    searchAction.define(controller);
     favoritesAction.define(controller);
     controller.done();
   }

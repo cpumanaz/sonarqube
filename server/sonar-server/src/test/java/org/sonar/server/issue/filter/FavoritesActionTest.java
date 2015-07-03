@@ -52,7 +52,7 @@ public class FavoritesActionTest {
   @Before
   public void setUp() {
     action = new FavoritesAction(service, userSessionRule);
-    tester = new WsTester(new IssueFilterWs(mock(AppAction.class), mock(ShowAction.class), action));
+    tester = new WsTester(new IssueFilterWs(mock(AppAction.class), mock(ShowAction.class), mock(SearchAction.class), action));
   }
 
   @Test

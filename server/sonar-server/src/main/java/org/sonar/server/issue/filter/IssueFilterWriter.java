@@ -42,6 +42,17 @@ public class IssueFilterWriter {
       .endObject();
   }
 
+  void writeUnwrapped(UserSession session, IssueFilterDto filter, JsonWriter json) {
+    json
+      .prop("id", filter.getId())
+      .prop("name", filter.getName())
+      .prop("description", filter.getDescription())
+      .prop("user", filter.getUserLogin())
+      .prop("shared", filter.isShared())
+      .prop("query", filter.getData())
+      .prop("canModify", canModifyFilter(session, filter));
+  }
+
   private boolean canModifyFilter(UserSession session, IssueFilterDto filter) {
     return session.isLoggedIn() &&
       (StringUtils.equals(filter.getUserLogin(), session.getLogin()) || session.hasGlobalPermission(GlobalPermissions.SYSTEM_ADMIN));
