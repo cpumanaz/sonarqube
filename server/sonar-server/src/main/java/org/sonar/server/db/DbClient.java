@@ -25,15 +25,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import org.sonar.api.server.ServerSide;
+import javax.annotation.Nullable;
 import org.sonar.db.Dao;
 import org.sonar.db.Database;
 import org.sonar.db.DbSession;
 import org.sonar.db.MyBatis;
 import org.sonar.db.activity.ActivityDao;
-import org.sonar.db.component.ComponentIndexDao;
 import org.sonar.db.component.ComponentLinkDao;
 import org.sonar.db.component.ResourceDao;
+import org.sonar.db.component.ResourceIndexerDao;
 import org.sonar.db.component.SnapshotDao;
 import org.sonar.db.compute.AnalysisReportDao;
 import org.sonar.db.dashboard.DashboardDao;
@@ -66,10 +66,6 @@ import org.sonar.server.rule.db.RuleDao;
 import org.sonar.server.user.db.GroupDao;
 import org.sonar.server.user.db.UserDao;
 
-/**
- * Facade for all db components, mainly DAOs
- */
-@ServerSide
 public class DbClient {
 
   private final Database db;
@@ -103,7 +99,7 @@ public class DbClient {
   private final WidgetPropertyDao widgetPropertyDao;
   private final FileSourceDao fileSourceDao;
   private final AuthorDao authorDao;
-  private final ComponentIndexDao componentIndexDao;
+  private final ResourceIndexerDao componentIndexDao;
   private final ComponentLinkDao componentLinkDao;
   private final EventDao eventDao;
   private final PurgeDao purgeDao;
@@ -148,7 +144,7 @@ public class DbClient {
     widgetPropertyDao = getDao(map, WidgetPropertyDao.class);
     fileSourceDao = getDao(map, FileSourceDao.class);
     authorDao = getDao(map, AuthorDao.class);
-    componentIndexDao = getDao(map, ComponentIndexDao.class);
+    componentIndexDao = getDao(map, ResourceIndexerDao.class);
     componentLinkDao = getDao(map, ComponentLinkDao.class);
     eventDao = getDao(map, EventDao.class);
     purgeDao = getDao(map, PurgeDao.class);
@@ -161,6 +157,10 @@ public class DbClient {
 
   public DbSession openSession(boolean batch) {
     return myBatis.openSession(batch);
+  }
+
+  public void closeSession(@Nullable DbSession session) {
+    MyBatis.closeQuietly(session);
   }
 
   public RuleDao ruleDao() {
@@ -283,7 +283,7 @@ public class DbClient {
     return authorDao;
   }
 
-  public ComponentIndexDao componentIndexDao() {
+  public ResourceIndexerDao componentIndexDao() {
     return componentIndexDao;
   }
 

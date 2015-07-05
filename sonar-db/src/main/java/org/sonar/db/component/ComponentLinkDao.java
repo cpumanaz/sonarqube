@@ -23,8 +23,6 @@ package org.sonar.db.component;
 import java.util.List;
 import org.sonar.db.Dao;
 import org.sonar.db.DbSession;
-import org.sonar.db.component.ComponentLinkDto;
-import org.sonar.db.component.ComponentLinkMapper;
 
 public class ComponentLinkDao implements Dao {
 
@@ -32,12 +30,12 @@ public class ComponentLinkDao implements Dao {
     return session.getMapper(ComponentLinkMapper.class).selectByComponentUuid(componentUuid);
   }
 
-  public void insert(DbSession session, ComponentLinkDto item) {
-    session.getMapper(ComponentLinkMapper.class).insert(item);
+  public void insert(DbSession session, ComponentLinkDto dto) {
+    session.getMapper(ComponentLinkMapper.class).insert(dto);
   }
 
-  public void update(DbSession session, ComponentLinkDto item) {
-    session.getMapper(ComponentLinkMapper.class).update(item);
+  public void update(DbSession session, ComponentLinkDto dto) {
+    session.getMapper(ComponentLinkMapper.class).update(dto);
   }
 
   public void delete(DbSession session, long id) {

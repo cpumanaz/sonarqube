@@ -17,13 +17,25 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package org.sonar.db;
 
-package org.sonar.db.component;
+import org.sonar.api.utils.System2;
 
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
+public abstract class AbstractDao implements Dao {
 
-public interface ComponentIndexMapper {
+  private final MyBatis myBatis;
+  private final System2 system2;
 
-  List<Long> selectProjectIdsFromQueryAndViewOrSubViewUuid(@Param("query") String query, @Param("viewUuidQuery") String viewUuidQuery);
+  public AbstractDao(MyBatis myBatis, System2 system2) {
+    this.myBatis = myBatis;
+    this.system2 = system2;
+  }
+
+  protected MyBatis myBatis() {
+    return myBatis;
+  }
+
+  protected long now() {
+    return system2.now();
+  }
 }

@@ -63,9 +63,9 @@ import org.dbunit.ext.mssql.InsertIdentityOperation;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.AssumptionViolatedException;
 import org.junit.rules.ExternalResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.config.Settings;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.db.deprecated.NullQueue;
 import org.sonar.db.dialect.Dialect;
 
@@ -84,7 +84,7 @@ import static org.junit.Assert.fail;
  */
 public class DbTester extends ExternalResource {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DbTester.class);
+  private static final Logger LOG = Loggers.get(DbTester.class);
 
   private Database db;
   private DatabaseCommands commands;

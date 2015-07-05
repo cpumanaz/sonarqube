@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.sonar.db.activity.ActivityDao;
-import org.sonar.db.component.ComponentIndexDao;
 import org.sonar.db.component.ComponentLinkDao;
 import org.sonar.db.component.ResourceDao;
 import org.sonar.db.component.ResourceIndexerDao;
@@ -85,7 +84,6 @@ public final class DaoUtils {
       AnalysisReportDao.class,
       AuthorDao.class,
       AuthorizationDao.class,
-      ComponentIndexDao.class,
       ComponentLinkDao.class,
       DashboardDao.class,
       DuplicationDao.class,

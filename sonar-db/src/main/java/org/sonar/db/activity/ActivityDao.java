@@ -19,29 +19,20 @@
  */
 package org.sonar.db.activity;
 
-import org.sonar.api.server.ServerSide;
+import java.util.Date;
 import org.sonar.api.utils.System2;
-import org.sonar.db.activity.ActivityDto;
-import org.sonar.db.activity.ActivityMapper;
-import org.sonar.db.Dao;
+import org.sonar.db.AbstractDao;
 import org.sonar.db.DbSession;
 import org.sonar.db.MyBatis;
 
-import java.util.Date;
-
-@ServerSide
-public class ActivityDao implements Dao {
-
-  private final MyBatis mybatis;
-  private final System2 system;
+public class ActivityDao extends AbstractDao {
 
   public ActivityDao(MyBatis mybatis, System2 system) {
-    this.mybatis = mybatis;
-    this.system = system;
+    super(mybatis, system);
   }
 
   public void insert(ActivityDto dto) {
-    DbSession session = mybatis.openSession(false);
+    DbSession session = myBatis().openSession(false);
     try {
       insert(session, dto);
       session.commit();
@@ -51,7 +42,7 @@ public class ActivityDao implements Dao {
   }
 
   public void insert(DbSession session, ActivityDto dto) {
-    dto.setCreatedAt(new Date(system.now()));
+    dto.setCreatedAt(new Date(now()));
     session.getMapper(ActivityMapper.class).insert(dto);
   }
 
