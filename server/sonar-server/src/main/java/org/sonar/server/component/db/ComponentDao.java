@@ -32,13 +32,13 @@ import org.apache.ibatis.session.RowBounds;
 import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.resources.Scopes;
 import org.sonar.api.server.ServerSide;
-import org.sonar.db.component.ComponentDto;
-import org.sonar.db.component.FilePathWithHashDto;
-import org.sonar.db.component.UuidWithProjectUuidDto;
-import org.sonar.db.component.ComponentMapper;
 import org.sonar.db.Dao;
 import org.sonar.db.DaoUtils;
 import org.sonar.db.DbSession;
+import org.sonar.db.component.ComponentDto;
+import org.sonar.db.component.ComponentMapper;
+import org.sonar.db.component.FilePathWithHashDto;
+import org.sonar.db.component.UuidWithProjectUuidDto;
 import org.sonar.server.es.SearchOptions;
 import org.sonar.server.exceptions.NotFoundException;
 
@@ -50,16 +50,16 @@ import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 @ServerSide
 public class ComponentDao implements Dao {
 
-  public ComponentDto selectById(Long id, DbSession session) {
+  public ComponentDto selectById(long id, DbSession session) {
     ComponentDto componentDto = selectNullableById(id, session);
     if (componentDto == null) {
-      throw new NotFoundException(String.format("Project with id '%s' not found", id));
+      throw new IllegalArgumentException(String.format("Component id does not exist: %d", id));
     }
     return componentDto;
   }
 
   @CheckForNull
-  public ComponentDto selectNullableById(Long id, DbSession session) {
+  public ComponentDto selectNullableById(long id, DbSession session) {
     return mapper(session).selectById(id);
   }
 

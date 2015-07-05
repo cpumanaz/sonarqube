@@ -18,7 +18,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.sonar.server.component.db;
+package org.sonar.db.component;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -27,24 +27,20 @@ import java.util.List;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import org.sonar.api.resources.Scopes;
-import org.sonar.db.component.SnapshotDto;
-import org.sonar.db.component.SnapshotMapper;
-import org.sonar.db.component.SnapshotQuery;
 import org.sonar.db.Dao;
 import org.sonar.db.DbSession;
-import org.sonar.server.exceptions.NotFoundException;
 
 public class SnapshotDao implements Dao {
 
   @CheckForNull
-  public SnapshotDto selectNullableById(DbSession session, Long id) {
+  public SnapshotDto selectNullableById(DbSession session, long id) {
     return mapper(session).selectByKey(id);
   }
 
-  public SnapshotDto selectById(DbSession session, Long key) {
-    SnapshotDto value = selectNullableById(session, key);
+  public SnapshotDto selectById(DbSession session, long id) {
+    SnapshotDto value = selectNullableById(session, id);
     if (value == null) {
-      throw new NotFoundException(String.format("Key '%s' not found", key));
+      throw new IllegalArgumentException(String.format("Snapshot id does not exist: %d", id));
     }
     return value;
   }

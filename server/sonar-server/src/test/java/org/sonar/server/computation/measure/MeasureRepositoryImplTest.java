@@ -43,7 +43,7 @@ import org.sonar.db.DbSession;
 import org.sonar.db.DbTester;
 import org.sonar.db.rule.RuleDto;
 import org.sonar.server.component.db.ComponentDao;
-import org.sonar.server.component.db.SnapshotDao;
+import org.sonar.db.component.SnapshotDao;
 import org.sonar.server.computation.batch.BatchReportReader;
 import org.sonar.server.computation.batch.BatchReportReaderRule;
 import org.sonar.server.computation.component.Component;

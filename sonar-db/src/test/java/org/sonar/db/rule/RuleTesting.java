@@ -17,15 +17,13 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.server.rule;
+package org.sonar.db.rule;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.rule.RuleStatus;
 import org.sonar.api.rule.Severity;
-import org.sonar.api.server.debt.DebtRemediationFunction;
-import org.sonar.db.rule.RuleDto;
 import org.sonar.db.rule.RuleDto.Format;
 
 /**
@@ -75,8 +73,8 @@ public class RuleTesting {
       .setTags(ImmutableSet.of("tag1", "tag2"))
       .setSystemTags(ImmutableSet.of("systag1", "systag2"))
       .setLanguage("js")
-      .setRemediationFunction(DebtRemediationFunction.Type.LINEAR.toString())
-      .setDefaultRemediationFunction(DebtRemediationFunction.Type.LINEAR_OFFSET.toString())
+      .setRemediationFunction("LINEAR")
+      .setDefaultRemediationFunction("LINEAR_OFFSET")
       .setRemediationCoefficient("1h")
       .setDefaultRemediationCoefficient("5d")
       .setRemediationOffset("5min")
@@ -84,19 +82,19 @@ public class RuleTesting {
       .setEffortToFixDescription(ruleKey.repository() + "." + ruleKey.rule() + ".effortToFix");
   }
 
-  public static RuleDto newTemplateRule(RuleKey ruleKey){
+  public static RuleDto newTemplateRule(RuleKey ruleKey) {
     return newDto(ruleKey)
       .setIsTemplate(true);
   }
 
-  public static RuleDto newCustomRule(RuleDto templateRule){
+  public static RuleDto newCustomRule(RuleDto templateRule) {
     Preconditions.checkNotNull(templateRule.getId(), "The template rule need to be persisted before creating this custom rule.");
     return newDto(RuleKey.of(templateRule.getRepositoryKey(), templateRule.getRuleKey() + "_" + System.currentTimeMillis()))
       .setLanguage(templateRule.getLanguage())
       .setTemplateId(templateRule.getId());
   }
 
-  public static RuleDto newManualRule(String manualKey){
+  public static RuleDto newManualRule(String manualKey) {
     return new RuleDto().setRuleKey(manualKey)
       .setName("Name " + manualKey)
       .setRepositoryKey(RuleKey.MANUAL_REPOSITORY_KEY)

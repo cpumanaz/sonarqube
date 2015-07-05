@@ -34,11 +34,9 @@ import org.sonar.db.semaphore.SemaphoreUpdater;
 import org.sonar.db.semaphore.SemaphoresImpl;
 import org.sonar.db.version.DatabaseVersion;
 import org.sonar.server.component.db.ComponentDao;
-import org.sonar.server.component.db.SnapshotDao;
 import org.sonar.server.db.DbClient;
 import org.sonar.server.db.EmbeddedDatabaseFactory;
 import org.sonar.server.db.migrations.MigrationStepModule;
-import org.sonar.server.issue.db.IssueDao;
 import org.sonar.server.issue.index.IssueIndex;
 import org.sonar.server.measure.custom.persistence.CustomMeasureDao;
 import org.sonar.server.metric.persistence.MetricDao;
@@ -123,15 +121,13 @@ public class PlatformLevel1 extends PlatformLevel {
 
       // issues
       IssueIndex.class,
-      IssueDao.class,
 
       // measures
       MetricDao.class,
       CustomMeasureDao.class,
 
       // components
-      ComponentDao.class,
-      SnapshotDao.class);
+      ComponentDao.class);
     addAll(CorePropertyDefinitions.all());
     add(MigrationStepModule.class);
     addAll(DaoUtils.getDaoClasses());

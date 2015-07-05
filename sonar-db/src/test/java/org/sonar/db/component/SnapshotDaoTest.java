@@ -18,7 +18,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.sonar.server.component.db;
+package org.sonar.db.component;
 
 import java.util.Date;
 import java.util.List;
@@ -28,8 +28,6 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.sonar.api.utils.DateUtils;
-import org.sonar.db.component.SnapshotDto;
-import org.sonar.db.component.SnapshotQuery;
 import org.sonar.db.DbSession;
 import org.sonar.db.DbTester;
 import org.sonar.test.DbTests;

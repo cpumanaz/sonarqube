@@ -31,6 +31,7 @@ import org.sonar.db.component.ComponentLinkDao;
 import org.sonar.db.component.ResourceDao;
 import org.sonar.db.component.ResourceIndexerDao;
 import org.sonar.db.component.ResourceKeyUpdaterDao;
+import org.sonar.db.component.SnapshotDao;
 import org.sonar.db.compute.AnalysisReportDao;
 import org.sonar.db.dashboard.ActiveDashboardDao;
 import org.sonar.db.dashboard.DashboardDao;
@@ -112,6 +113,7 @@ public final class DaoUtils {
       RoleDao.class,
       RuleDao.class,
       SemaphoreDao.class,
+      SnapshotDao.class,
       UserDao.class,
       UserGroupDao.class,
       WidgetDao.class,
