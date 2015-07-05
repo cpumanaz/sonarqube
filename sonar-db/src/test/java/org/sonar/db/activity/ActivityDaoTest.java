@@ -17,19 +17,15 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.server.activity.db;
+package org.sonar.db.activity;
 
-import org.junit.Before;
+import java.util.Map;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.sonar.api.utils.System2;
-import org.sonar.db.activity.ActivityDao;
-import org.sonar.db.activity.ActivityDto;
 import org.sonar.db.DbTester;
 import org.sonar.test.DbTests;
-
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -38,16 +34,12 @@ import static org.mockito.Mockito.when;
 @Category(DbTests.class)
 public class ActivityDaoTest {
 
-  @Rule
-  public DbTester dbTester = new DbTester();
-
   System2 system = mock(System2.class);
-  ActivityDao sut;
 
-  @Before
-  public void before() {
-    sut = new ActivityDao(dbTester.myBatis(), system);
-  }
+  @Rule
+  public DbTester dbTester = DbTester.create(system);
+
+  ActivityDao sut = dbTester.getDbClient().activityDao();
 
   @Test
   public void insert() {

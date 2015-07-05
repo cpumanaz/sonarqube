@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.sonar.db.Dao;
 import org.sonar.db.DaoUtils;
+import org.sonar.db.DatabaseUtils;
 import org.sonar.db.DbSession;
 import org.sonar.db.component.SnapshotDto;
 
@@ -43,7 +44,7 @@ public class MeasureDao implements Dao {
   }
 
   public List<MeasureDto> findByComponentKeyAndMetricKeys(final DbSession session, final String componentKey, List<String> metricKeys) {
-    return DaoUtils.executeLargeInputs(metricKeys, new Function<List<String>, List<MeasureDto>>() {
+    return DatabaseUtils.executeLargeInputs(metricKeys, new Function<List<String>, List<MeasureDto>>() {
       @Override
       public List<MeasureDto> apply(List<String> keys) {
         return mapper(session).selectByComponentAndMetrics(componentKey, keys);
@@ -53,7 +54,7 @@ public class MeasureDao implements Dao {
 
   public List<PastMeasureDto> selectByComponentUuidAndProjectSnapshotIdAndMetricIds(final DbSession session, final String componentUuid, final long projectSnapshotId,
     Set<Integer> metricIds) {
-    return DaoUtils.executeLargeInputs(metricIds, new Function<List<Integer>, List<PastMeasureDto>>() {
+    return DatabaseUtils.executeLargeInputs(metricIds, new Function<List<Integer>, List<PastMeasureDto>>() {
       @Override
       public List<PastMeasureDto> apply(List<Integer> ids) {
         return mapper(session).selectByComponentUuidAndProjectSnapshotIdAndStatusAndMetricIds(componentUuid, projectSnapshotId, ids,

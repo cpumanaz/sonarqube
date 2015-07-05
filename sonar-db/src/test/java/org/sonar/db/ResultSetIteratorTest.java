@@ -27,9 +27,10 @@ import java.util.NoSuchElementException;
 import org.apache.commons.dbutils.DbUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.sonar.api.utils.System2;
 import org.sonar.test.DbTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,8 +39,8 @@ import static org.junit.Assert.fail;
 @Category(DbTests.class)
 public class ResultSetIteratorTest {
 
-  @Rule
-  public DbTester dbTester = new DbTester().schema(ResultSetIteratorTest.class, "schema.sql");
+  @ClassRule
+  public static DbTester dbTester = DbTester.createForSchema(System2.INSTANCE, ResultSetIteratorTest.class, "schema.sql");
 
   Connection connection = null;
 
@@ -57,7 +58,7 @@ public class ResultSetIteratorTest {
   public void create_iterator_from_statement() throws Exception {
     dbTester.prepareDbUnit(getClass(), "feed.xml");
 
-    PreparedStatement stmt = connection.prepareStatement("select * from fake order by id");
+    PreparedStatement stmt = connection.prepareStatement("select * from issues order by id");
     FirstIntColumnIterator iterator = new FirstIntColumnIterator(stmt);
 
     assertThat(iterator.hasNext()).isTrue();
@@ -89,7 +90,7 @@ public class ResultSetIteratorTest {
   public void iterate_empty_list() throws Exception {
     dbTester.prepareDbUnit(getClass(), "feed.xml");
 
-    PreparedStatement stmt = connection.prepareStatement("select * from fake where id < 0");
+    PreparedStatement stmt = connection.prepareStatement("select * from issues where id < 0");
     FirstIntColumnIterator iterator = new FirstIntColumnIterator(stmt);
 
     assertThat(iterator.hasNext()).isFalse();
@@ -99,7 +100,7 @@ public class ResultSetIteratorTest {
   public void create_iterator_from_result_set() throws Exception {
     dbTester.prepareDbUnit(getClass(), "feed.xml");
 
-    PreparedStatement stmt = connection.prepareStatement("select * from fake order by id");
+    PreparedStatement stmt = connection.prepareStatement("select * from issues order by id");
     ResultSet rs = stmt.executeQuery();
     FirstIntColumnIterator iterator = new FirstIntColumnIterator(rs);
 
@@ -114,7 +115,7 @@ public class ResultSetIteratorTest {
 
   @Test
   public void remove_row_is_not_supported() throws Exception {
-    PreparedStatement stmt = connection.prepareStatement("select * from fake order by id");
+    PreparedStatement stmt = connection.prepareStatement("select * from issues order by id");
     FirstIntColumnIterator iterator = new FirstIntColumnIterator(stmt);
 
     try {
@@ -131,7 +132,7 @@ public class ResultSetIteratorTest {
   public void fail_to_read_row() throws Exception {
     dbTester.prepareDbUnit(getClass(), "feed.xml");
 
-    PreparedStatement stmt = connection.prepareStatement("select * from fake order by id");
+    PreparedStatement stmt = connection.prepareStatement("select * from issues order by id");
     FailIterator iterator = new FailIterator(stmt);
 
     assertThat(iterator.hasNext()).isTrue();

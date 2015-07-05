@@ -34,6 +34,7 @@ import org.sonar.api.resources.Scopes;
 import org.sonar.api.server.ServerSide;
 import org.sonar.db.Dao;
 import org.sonar.db.DaoUtils;
+import org.sonar.db.DatabaseUtils;
 import org.sonar.db.DbSession;
 import org.sonar.db.component.ComponentDto;
 import org.sonar.db.component.ComponentMapper;
@@ -104,7 +105,7 @@ public class ComponentDao implements Dao {
   }
 
   public List<ComponentDto> selectByIds(final DbSession session, Collection<Long> ids) {
-    return DaoUtils.executeLargeInputs(ids, new Function<List<Long>, List<ComponentDto>>() {
+    return DatabaseUtils.executeLargeInputs(ids, new Function<List<Long>, List<ComponentDto>>() {
       @Override
       public List<ComponentDto> apply(List<Long> partition) {
         return mapper(session).selectByIds(partition);
@@ -113,7 +114,7 @@ public class ComponentDao implements Dao {
   }
 
   public List<ComponentDto> selectByUuids(final DbSession session, Collection<String> uuids) {
-    return DaoUtils.executeLargeInputs(uuids, new Function<List<String>, List<ComponentDto>>() {
+    return DatabaseUtils.executeLargeInputs(uuids, new Function<List<String>, List<ComponentDto>>() {
       @Override
       public List<ComponentDto> apply(List<String> partition) {
         return mapper(session).selectByUuids(partition);
@@ -122,7 +123,7 @@ public class ComponentDao implements Dao {
   }
 
   public List<String> selectExistingUuids(final DbSession session, Collection<String> uuids) {
-    return DaoUtils.executeLargeInputs(uuids, new Function<List<String>, List<String>>() {
+    return DatabaseUtils.executeLargeInputs(uuids, new Function<List<String>, List<String>>() {
       @Override
       public List<String> apply(List<String> partition) {
         return mapper(session).selectExistingUuids(partition);

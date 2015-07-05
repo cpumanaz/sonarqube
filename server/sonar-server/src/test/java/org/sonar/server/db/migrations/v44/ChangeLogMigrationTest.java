@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 public class ChangeLogMigrationTest {
 
   @ClassRule
-  public static DbTester db = new DbTester().schema(ChangeLogMigrationTest.class, "schema.sql");
+  public static DbTester db = DbTester.createForSchema(System2.INSTANCE, ChangeLogMigrationTest.class, "schema.sql");
 
   System2 system2 = mock(System2.class);
   DbClient dbClient;

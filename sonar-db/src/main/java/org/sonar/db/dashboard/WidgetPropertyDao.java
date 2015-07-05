@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import org.sonar.db.Dao;
 import org.sonar.db.DaoUtils;
+import org.sonar.db.DatabaseUtils;
 import org.sonar.db.DbSession;
 import org.sonar.db.MyBatis;
 
@@ -74,7 +75,7 @@ public class WidgetPropertyDao implements Dao {
   }
 
   public void deleteByWidgetIds(final DbSession session, List<Long> widgetIdsWithPropertiesToDelete) {
-    DaoUtils.executeLargeInputs(widgetIdsWithPropertiesToDelete, new Function<List<Long>, List<Void>>() {
+    DatabaseUtils.executeLargeInputs(widgetIdsWithPropertiesToDelete, new Function<List<Long>, List<Void>>() {
       @Override
       public List<Void> apply(List<Long> input) {
         mapper(session).deleteByWidgetIds(input);

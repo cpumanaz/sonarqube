@@ -19,11 +19,7 @@
  */
 package org.sonar.db;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import org.sonar.db.activity.ActivityDao;
 import org.sonar.db.component.ComponentLinkDao;
@@ -65,18 +61,14 @@ import org.sonar.db.user.RoleDao;
 import org.sonar.db.user.UserDao;
 import org.sonar.db.user.UserGroupDao;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 public final class DaoUtils {
-
-  private static final int PARTITION_SIZE_FOR_ORACLE = 1000;
 
   private DaoUtils() {
     // only static stuff
   }
 
-  public static List<Class> getDaoClasses() {
-    return ImmutableList.<Class>of(
+  public static List<Class<? extends Dao>> getDaoClasses() {
+    return Arrays.asList(
       ActionPlanDao.class,
       ActionPlanStatsDao.class,
       ActiveDashboardDao.class,
@@ -117,53 +109,5 @@ public final class DaoUtils {
       WidgetDao.class,
       WidgetPropertyDao.class
       );
-  }
-
-  /**
-   * Partition by 1000 elements a list of input and execute a function on each part.
-   *
-   * The goal is to prevent issue with ORACLE when there's more than 1000 elements in a 'in ('X', 'Y', ...)'
-   * and with MsSQL when there's more than 2000 parameters in a query
-   */
-  public static <OUTPUT, INPUT> List<OUTPUT> executeLargeInputs(Collection<INPUT> input, Function<List<INPUT>, List<OUTPUT>> function) {
-    if (input.isEmpty()) {
-      return Collections.emptyList();
-    }
-    List<OUTPUT> results = newArrayList();
-    List<List<INPUT>> partitionList = Lists.partition(newArrayList(input), PARTITION_SIZE_FOR_ORACLE);
-    for (List<INPUT> partition : partitionList) {
-      List<OUTPUT> subResults = function.apply(partition);
-      results.addAll(subResults);
-    }
-    return results;
-  }
-
-  /**
-   * Partition by 1000 elements a list of input and execute a function on each part.
-   * The function has not output (ex: delete operation)
-   *
-   * The goal is to prevent issue with ORACLE when there's more than 1000 elements in a 'in ('X', 'Y', ...)'
-   * and with MsSQL when there's more than 2000 parameters in a query
-   */
-  public static <INPUT> void executeLargeInputsWithoutOutput(Collection<INPUT> input, Function<List<INPUT>, Void> function) {
-    if (input.isEmpty()) {
-      return;
-    }
-
-    List<List<INPUT>> partitions = Lists.partition(newArrayList(input), PARTITION_SIZE_FOR_ORACLE);
-    for (List<INPUT> partition : partitions) {
-      function.apply(partition);
-    }
-  }
-
-  public static String repeatCondition(String sql, int count, String separator) {
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < count; i++) {
-      sb.append(sql);
-      if (i < count - 1) {
-        sb.append(" ").append(separator).append(" ");
-      }
-    }
-    return sb.toString();
   }
 }
