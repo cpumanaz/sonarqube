@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import org.sonar.db.activity.ActivityDao;
 import org.sonar.db.component.ComponentLinkDao;
 import org.sonar.db.component.ResourceDao;
-import org.sonar.db.component.ResourceIndexerDao;
+import org.sonar.db.component.ResourceIndexDao;
 import org.sonar.db.component.SnapshotDao;
 import org.sonar.db.compute.AnalysisReportDao;
 import org.sonar.db.dashboard.DashboardDao;
@@ -80,7 +80,7 @@ public class DbClient {
   private final WidgetPropertyDao widgetPropertyDao;
   private final FileSourceDao fileSourceDao;
   private final AuthorDao authorDao;
-  private final ResourceIndexerDao componentIndexDao;
+  private final ResourceIndexDao componentIndexDao;
   private final ComponentLinkDao componentLinkDao;
   private final EventDao eventDao;
   private final PurgeDao purgeDao;
@@ -118,7 +118,7 @@ public class DbClient {
     widgetPropertyDao = getDao(map, WidgetPropertyDao.class);
     fileSourceDao = getDao(map, FileSourceDao.class);
     authorDao = getDao(map, AuthorDao.class);
-    componentIndexDao = getDao(map, ResourceIndexerDao.class);
+    componentIndexDao = getDao(map, ResourceIndexDao.class);
     componentLinkDao = getDao(map, ComponentLinkDao.class);
     eventDao = getDao(map, EventDao.class);
     purgeDao = getDao(map, PurgeDao.class);
@@ -235,7 +235,7 @@ public class DbClient {
     return authorDao;
   }
 
-  public ResourceIndexerDao componentIndexDao() {
+  public ResourceIndexDao componentIndexDao() {
     return componentIndexDao;
   }
 

@@ -19,6 +19,7 @@
  */
 package org.sonar.server.source.index;
 
+import java.sql.Connection;
 import java.util.Map;
 import org.assertj.core.data.MapEntry;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -28,7 +29,6 @@ import org.junit.experimental.categories.Category;
 import org.sonar.api.utils.System2;
 import org.sonar.db.DbTester;
 import org.sonar.server.source.db.FileSourceDb;
-import org.sonar.server.source.db.FileSourceTesting;
 import org.sonar.test.DbTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +38,7 @@ import static org.junit.Assert.fail;
 public class SourceLineResultSetIteratorTest {
 
   @ClassRule
-  public static DbTester db = DbTester.createForSchema(System2.INSTANCE, SourceLineResultSetIteratorTest.class, "schema.sql");
+  public static DbTester db = DbTester.create(System2.INSTANCE);
 
   SourceLineResultSetIterator iterator;
 
@@ -51,7 +51,9 @@ public class SourceLineResultSetIteratorTest {
   @Test
   public void traverse_db() throws Exception {
     db.prepareDbUnit(getClass(), "shared.xml");
-    FileSourceTesting.updateDataColumn(db.openConnection(), "F1", FileSourceTesting.newFakeData(3).build());
+    try (Connection connection = db.openConnection()) {
+      FileSourceTesting.updateDataColumn(connection, "F1", FileSourceTesting.newFakeData(3).build());
+    }
 
     iterator = SourceLineResultSetIterator.create(db.getDbClient(), db.getSession(), 0L, null);
     assertThat(iterator.hasNext()).isTrue();
@@ -91,7 +93,9 @@ public class SourceLineResultSetIteratorTest {
     db.prepareDbUnit(getClass(), "shared.xml");
     FileSourceDb.Data.Builder dataBuilder = FileSourceDb.Data.newBuilder();
     dataBuilder.addLinesBuilder().setLine(1).build();
-    FileSourceTesting.updateDataColumn(db.openConnection(), "F1", dataBuilder.build());
+    try (Connection connection = db.openConnection()) {
+      FileSourceTesting.updateDataColumn(connection, "F1", dataBuilder.build());
+    }
 
     iterator = SourceLineResultSetIterator.create(db.getDbClient(), db.getSession(), 0L, null);
     FileSourcesUpdaterHelper.Row row = iterator.next();
@@ -137,7 +141,9 @@ public class SourceLineResultSetIteratorTest {
     db.prepareDbUnit(getClass(), "filter_by_project.xml");
     FileSourceDb.Data.Builder dataBuilder = FileSourceDb.Data.newBuilder();
     dataBuilder.addLinesBuilder().setLine(1).build();
-    FileSourceTesting.updateDataColumn(db.openConnection(), "F1", dataBuilder.build());
+    try (Connection connection = db.openConnection()) {
+      FileSourceTesting.updateDataColumn(connection, "F1", dataBuilder.build());
+    }
 
     iterator = SourceLineResultSetIterator.create(db.getDbClient(), db.getSession(), 0L, "P1");
 
@@ -154,7 +160,9 @@ public class SourceLineResultSetIteratorTest {
     db.prepareDbUnit(getClass(), "filter_by_project_and_date.xml");
     FileSourceDb.Data.Builder dataBuilder = FileSourceDb.Data.newBuilder();
     dataBuilder.addLinesBuilder().setLine(1).build();
-    FileSourceTesting.updateDataColumn(db.openConnection(), "F1", dataBuilder.build());
+    try (Connection connection = db.openConnection()) {
+      FileSourceTesting.updateDataColumn(connection, "F1", dataBuilder.build());
+    }
 
     iterator = SourceLineResultSetIterator.create(db.getDbClient(), db.getSession(), 1400000000000L, "P1");
 
@@ -170,7 +178,9 @@ public class SourceLineResultSetIteratorTest {
   public void fail_on_bad_data_format() throws Exception {
     db.prepareDbUnit(getClass(), "shared.xml");
 
-    FileSourceTesting.updateDataColumn(db.openConnection(), "F1", "THIS_IS_NOT_PROTOBUF".getBytes());
+    try (Connection connection = db.openConnection()) {
+      FileSourceTesting.updateDataColumn(connection, "F1", "THIS_IS_NOT_PROTOBUF".getBytes());
+    }
 
     iterator = SourceLineResultSetIterator.create(db.getDbClient(), db.getSession(), 0L, null);
     try {
