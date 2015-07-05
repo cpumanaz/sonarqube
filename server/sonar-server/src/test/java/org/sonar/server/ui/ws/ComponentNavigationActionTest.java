@@ -59,7 +59,7 @@ import org.sonar.server.component.db.SnapshotDao;
 import org.sonar.server.db.DbClient;
 import org.sonar.server.exceptions.ForbiddenException;
 import org.sonar.server.exceptions.NotFoundException;
-import org.sonar.server.measure.persistence.MeasureDao;
+import org.sonar.db.measure.MeasureDao;
 import org.sonar.server.tester.UserSessionRule;
 import org.sonar.server.ui.Views;
 import org.sonar.server.user.db.UserDao;

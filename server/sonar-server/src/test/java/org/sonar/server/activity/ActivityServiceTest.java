@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.sonar.api.config.Settings;
 import org.sonar.api.utils.System2;
 import org.sonar.db.DbTester;
-import org.sonar.server.activity.db.ActivityDao;
+import org.sonar.db.activity.ActivityDao;
 import org.sonar.server.activity.index.ActivityDoc;
 import org.sonar.server.activity.index.ActivityIndexDefinition;
 import org.sonar.server.activity.index.ActivityIndexer;

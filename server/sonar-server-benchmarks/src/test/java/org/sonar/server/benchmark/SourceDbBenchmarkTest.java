@@ -29,7 +29,7 @@ import org.sonar.api.utils.internal.Uuids;
 import org.sonar.db.DbTester;
 import org.sonar.db.source.FileSourceDto;
 import org.sonar.server.db.DbClient;
-import org.sonar.server.source.db.FileSourceDao;
+import org.sonar.db.source.FileSourceDao;
 import org.sonar.server.source.db.FileSourceDb;
 import org.sonar.server.source.index.FileSourcesUpdaterHelper;
 import org.sonar.server.source.index.SourceLineResultSetIterator;

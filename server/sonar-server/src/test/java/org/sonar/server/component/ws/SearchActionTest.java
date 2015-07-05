@@ -30,7 +30,7 @@ import org.sonar.api.web.UserRole;
 import org.sonar.db.DbTester;
 import org.sonar.db.user.AuthorizationDao;
 import org.sonar.server.component.db.ComponentDao;
-import org.sonar.server.component.db.ComponentIndexDao;
+import org.sonar.db.component.ComponentIndexDao;
 import org.sonar.server.db.DbClient;
 import org.sonar.server.tester.UserSessionRule;
 import org.sonar.server.ws.WsTester;

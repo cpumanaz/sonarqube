@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.sonar.api.utils.System2;
+import org.sonar.db.activity.ActivityDao;
 import org.sonar.db.activity.ActivityDto;
 import org.sonar.db.DbTester;
 import org.sonar.test.DbTests;
