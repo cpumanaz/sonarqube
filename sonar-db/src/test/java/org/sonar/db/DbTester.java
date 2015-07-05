@@ -71,7 +71,7 @@ public class DbTester extends ExternalResource {
 
   private final System2 system2;
   private final TestDb db;
-  private DbClient2 client;
+  private DbClient client;
   private DbSession session = null;
 
   @Deprecated
@@ -118,7 +118,7 @@ public class DbTester extends ExternalResource {
     db.truncateTables();
   }
 
-  public DbClient2 getDbClient() {
+  public DbClient getDbClient() {
     if (client == null) {
       TransientPicoContainer ioc = new TransientPicoContainer();
       ioc.addComponent(db.getMyBatis());
@@ -127,7 +127,7 @@ public class DbTester extends ExternalResource {
         ioc.addComponent(daoClass);
       }
       List<Dao> daos = ioc.getComponents(Dao.class);
-      client = new DbClient2(db.getMyBatis(), daos.toArray(new Dao[daos.size()]));
+      client = new DbClient(db.getDatabase(), db.getMyBatis(), daos.toArray(new Dao[daos.size()]));
     }
     return client;
   }
