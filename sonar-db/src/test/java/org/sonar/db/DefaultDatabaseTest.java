@@ -35,35 +35,19 @@ public class DefaultDatabaseTest {
     db.initSettings();
 
     Properties props = db.getProperties();
-    assertThat(props.getProperty("sonar.jdbc.username")).isEqualTo("sonar");
-    assertThat(props.getProperty("sonar.jdbc.password")).isEqualTo("sonar");
     assertThat(props.getProperty("sonar.jdbc.url")).isEqualTo("jdbc:h2:tcp://localhost/sonar");
     assertThat(props.getProperty("sonar.jdbc.driverClassName")).isEqualTo("org.h2.Driver");
     assertThat(db.toString()).isEqualTo("Database[jdbc:h2:tcp://localhost/sonar]");
   }
 
   @Test
-  public void shouldSupportDeprecatedUserProperty() {
-    Settings settings = new Settings();
-    settings.setProperty("sonar.jdbc.user", "me");
-
-    DefaultDatabase db = new DefaultDatabase(settings);
-    db.initSettings();
-    Properties props = db.getProperties();
-
-    assertThat(props.getProperty("sonar.jdbc.username")).isEqualTo("me");
-  }
-
-  @Test
   public void shouldExtractCommonsDbcpProperties() {
     Properties props = new Properties();
     props.setProperty("sonar.jdbc.driverClassName", "my.Driver");
-    props.setProperty("sonar.jdbc.username", "me");
     props.setProperty("sonar.jdbc.maxActive", "5");
 
     Properties commonsDbcpProps = DefaultDatabase.extractCommonsDbcpProperties(props);
 
-    assertThat(commonsDbcpProps.getProperty("username")).isEqualTo("me");
     assertThat(commonsDbcpProps.getProperty("driverClassName")).isEqualTo("my.Driver");
     assertThat(commonsDbcpProps.getProperty("maxActive")).isEqualTo("5");
   }
@@ -90,8 +74,6 @@ public class DefaultDatabaseTest {
     Settings settings = new Settings();
     settings.setProperty("sonar.jdbc.url", "jdbc:h2:mem:sonar");
     settings.setProperty("sonar.jdbc.driverClassName", "org.h2.Driver");
-    settings.setProperty("sonar.jdbc.username", "sonar");
-    settings.setProperty("sonar.jdbc.password", "sonar");
     settings.setProperty("sonar.jdbc.maxActive", "1");
 
     DefaultDatabase db = new DefaultDatabase(settings);
