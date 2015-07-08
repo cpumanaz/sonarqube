@@ -353,13 +353,26 @@ public class ComponentDaoTest {
   public void select_all_modules_tree() {
     db.prepareDbUnit(getClass(), "multi-modules.xml");
 
+    // From root project
+    List<ComponentDto> modules = sut.selectDescendantModules(db.getSession(), "ABCD");
+    assertThat(modules).extracting("uuid").containsOnly("ABCD", "EFGH", "FGHI");
+
+    // From module
+    modules = sut.selectDescendantModules(db.getSession(), "EFGH");
+    assertThat(modules).extracting("uuid").containsOnly("EFGH", "FGHI");
+  }
+
+  @Test
+  public void select_all_modules_tree_with_removed_components() {
+    db.prepareDbUnit(getClass(), "multi-modules-with-removed-components.xml");
+
     // From root project, disabled sub module is returned
     List<ComponentDto> modules = sut.selectDescendantModules(db.getSession(), "ABCD");
-    assertThat(modules).extracting("uuid").containsOnly("ABCD", "EFGH", "FGHI", "IHGF");
+    assertThat(modules).extracting("uuid").containsOnly("ABCD", "EFGH", "IHGF");
 
     // From module, disabled sub module is returned
     modules = sut.selectDescendantModules(db.getSession(), "EFGH");
-    assertThat(modules).extracting("uuid").containsOnly("EFGH", "FGHI", "IHGF");
+    assertThat(modules).extracting("uuid").containsOnly("EFGH", "IHGF");
 
     // From removed sub module -> should not be returned
     assertThat(sut.selectDescendantModules(db.getSession(), "IHGF")).isEmpty();
@@ -430,8 +443,28 @@ public class ComponentDaoTest {
   }
 
   @Test
+  public void select_components_from_project_with_removed_components() {
+    db.prepareDbUnit(getClass(), "multi-modules-with-removed-components.xml");
+
+    List<ComponentDto> components = sut.selectComponentsFromProjectKey(db.getSession(), "org.struts:struts");
+    assertThat(components).hasSize(5);
+
+    assertThat(sut.selectComponentsFromProjectKey(db.getSession(), "UNKNOWN")).isEmpty();
+  }
+
+  @Test
   public void select_modules_from_project() {
     db.prepareDbUnit(getClass(), "multi-modules.xml");
+
+    List<ComponentDto> components = sut.selectModulesFromProjectKey(db.getSession(), "org.struts:struts");
+    assertThat(components).hasSize(3);
+
+    assertThat(sut.selectModulesFromProjectKey(db.getSession(), "UNKNOWN")).isEmpty();
+  }
+
+  @Test
+  public void select_modules_from_project_with_removed_components() {
+    db.prepareDbUnit(getClass(), "multi-modules-with-removed-components.xml");
 
     List<ComponentDto> components = sut.selectModulesFromProjectKey(db.getSession(), "org.struts:struts");
     assertThat(components).hasSize(3);

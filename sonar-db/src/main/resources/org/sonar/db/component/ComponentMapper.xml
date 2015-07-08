@@ -215,7 +215,6 @@
     FROM projects p
     INNER JOIN projects root ON root.uuid=p.project_uuid AND root.kee=#{projectKey}
     <where>
-      AND p.enabled=${_true}
       <if test="scope != null">
         AND p.scope=#{scope}
       </if>

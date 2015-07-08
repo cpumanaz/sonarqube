@@ -268,6 +268,11 @@ public class PersistComponentsStep implements ComputationStep {
       existingComponent.setParentProjectId(newComponent.parentProjectId());
       isUpdated = true;
     }
+    if (!existingComponent.isEnabled()) {
+      // If component was previously removed, re-enable it
+      existingComponent.setEnabled(true);
+      isUpdated = true;
+    }
     return isUpdated;
   }
 
